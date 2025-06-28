@@ -1,0 +1,27 @@
+$:
+  vscode:
+    - runner:
+        cpus: 4
+      docker:
+        build: .ide/Dockerfile
+      services:
+        - vscode
+        - docker
+      stages:
+        - name: 初始化完成
+          script: echo "初始化完成"
+main:
+  push:
+    - name: 推送镜像
+      imports:
+        - https://cnb.cool/Mintimate/secret/-/blob/main/SyncToGitHub.yml
+      stages:
+        - name: 自动同步代码
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/Mintimate/memos-bb-time.git
+            auth_type: https
+            username: ${GIT_USERNAME}
+            password: ${GIT_ACCESS_TOKEN}
+            branch: main
+            force: true
